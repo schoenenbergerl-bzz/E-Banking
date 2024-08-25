@@ -1,5 +1,6 @@
 import random
 import string
+import re
 
 
 class Account:
@@ -91,6 +92,26 @@ class BankingSystem:
             print("Account not found.")
 
 
+def validate_password(password):
+    """Validates that the password meets the required criteria."""
+    if len(password) < 8:
+        print("Error: Password must be at least 8 characters long.")
+        return False
+    if not re.search(r"[A-Z]", password):
+        print("Error: Password must contain at least one uppercase letter.")
+        return False
+    if not re.search(r"[a-z]", password):
+        print("Error: Password must contain at least one lowercase letter.")
+        return False
+    if not re.search(r"[0-9]", password):
+        print("Error: Password must contain at least one digit.")
+        return False
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        print("Error: Password must contain at least one special character.")
+        return False
+    return True
+
+
 def main():
     bank = BankingSystem()
 
@@ -168,7 +189,10 @@ def main():
             elif contract_code in bank.accounts:
                 print(f"Error: An account with contract code {contract_code} already exists.")
             else:
-                password = input("Enter a password: ")
+                while True:
+                    password = input("Enter a password: ")
+                    if validate_password(password):
+                        break
                 bank.create_account(contract_code, password)
 
         elif choice == '3':
